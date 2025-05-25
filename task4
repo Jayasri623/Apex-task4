@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Projects</title>
+  <link rel="stylesheet" href="style3.css" />
+</head>
+<body>
+
+  <!-- ===== Portfolio Website ===== -->
+  <section id="portfolio">
+    <header>
+      <h1>John Doe</h1>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section id="about">
+      <h2>About Me</h2>
+      <p>I am a passionate web developer with experience in building responsive sites.</p>
+    </section>
+
+    <section id="projects">
+      <h2>Projects</h2>
+      <ul>
+        <li>Quiz App</li>
+        <li>To-Do List</li>
+      </ul>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <form onsubmit="submitForm(event)">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea placeholder="Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </section>
+
+  <!-- ===== To-Do List App ===== -->
+  <section id="todo">
+    <h2>To-Do List</h2>
+    <input type="text" id="task" placeholder="Enter a task" />
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+  </section>
+
+  <!-- ===== Product Listing Page ===== -->
+  <section id="products">
+    <h2>Product Listing</h2>
+    <select id="category" onchange="filterProducts()">
+      <option value="all">All Categories</option>
+      <option value="electronics">Electronics</option>
+      <option value="clothing">Clothing</option>
+    </select>
+    <select id="sort" onchange="sortProducts()">
+      <option value="default">Sort By</option>
+      <option value="price">Price</option>
+    </select>
+    <div id="productContainer"></div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+header {
+  background-color: #4CAF50;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+section {
+  padding: 20px;
+  margin: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contact Form */
+form input,
+form textarea,
+form button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+/* To-Do List */
+#todo input {
+  width: 70%;
+  margin-right: 10px;
+}
+
+#todo button {
+  padding: 10px;
+}
+
+#taskList li {
+  margin: 5px 0;
+  background: #e2e2e2;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+/* Product Listing */
+#products select {
+  margin: 10px 5px;
+  padding: 5px;
+}
+
+#productContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.product {
+  background: #fff8dc;
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: calc(33% - 20px);
+  border-radius: 5px;
+}
+// Contact Form Submission
+function submitForm(event) {
+  event.preventDefault();
+  alert("Form submitted successfully!");
+}
+
+// To-Do List Logic
+function addTask() {
+  const taskInput = document.getElementById("task");
+  const taskList = document.getElementById("taskList");
+  const taskText = taskInput.value.trim();
+  if (taskText === "") return;
+
+  const li = document.createElement("li");
+  li.textContent = taskText;
+  li.onclick = () => li.remove(); // Remove on click
+  taskList.appendChild(li);
+  taskInput.value = "";
+}
+
+// Product Listing Logic
+const products = [
+  { name: "Laptop", category: "electronics", price: 800 },
+  { name: "Smartphone", category: "electronics", price: 500 },
+  { name: "T-Shirt", category: "clothing", price: 20 },
+  { name: "Jeans", category: "clothing", price: 40 }
+];
+
+function displayProducts(items) {
+  const container = document.getElementById("productContainer");
+  container.innerHTML = "";
+  items.forEach(product => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `<strong>${product.name}</strong><br>Category: ${product.category}<br>Price: $${product.price}`;
+    container.appendChild(div);
+  });
+}
+
+function filterProducts() {
+  const category = document.getElementById("category").value;
+  let filtered = products;
+  if (category !== "all") {
+    filtered = products.filter(p => p.category === category);
+  }
+  displayProducts(filtered);
+}
+
+function sortProducts() {
+  const sort = document.getElementById("sort").value;
+  let sorted = [...products];
+  if (sort === "price") {
+    sorted.sort((a, b) => a.price - b.price);
+  }
+  displayProducts(sorted);
+}
+
+// Initial load
+window.onload = () => {
+  displayProducts(products);
+};
